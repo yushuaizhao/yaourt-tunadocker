@@ -9,7 +9,9 @@ RUN /usr/bin/chmod -v 1777 /tmp
 RUN echo "keyserver-options auto-key-retrieve" >> /etc/pacman.d/gnupg/gpg.conf && \
     pacman-key --init && \
     pacman-key --populate archlinux && \
-    /usr/bin/pacman -Sy --noconfirm archlinux-keyring && \
+    echo "Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/\$repo/os/\$arch" | /usr/sbin/sudo tee /etc/pacman.d/mirrorlist && \
+    echo -e "[archlinuxcn]\nServer = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/\$arch" | /usr/sbin/sudo tee -a /etc/pacman.conf && \
+    /usr/bin/pacman -Sy --noconfirm archlinux-keyring archlinuxcn-keyring && \
     /usr/bin/pacman -Su --noconfirm && \
     /usr/bin/pacman-db-upgrade && \
     /usr/bin/pacman -S --noconfirm ca-certificates ca-certificates-mozilla && \
@@ -35,4 +37,5 @@ RUN /usr/bin/mkdir -pv /tmp/yaourt_install && \
     /usr/sbin/makepkg PKGBUILD && \
     /usr/sbin/sudo /usr/sbin/pacman -U yaourt*pkg*.tar.xz --noconfirm && \
     cd && \
+    echo "AURURL=\"https://aur.tuna.tsinghua.edu.cn\"" | /usr/sbin/sudo tee -a /etc/yaourtrc && \
     /usr/sbin/rm -rv /tmp/yaourt_install
