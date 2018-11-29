@@ -8,10 +8,10 @@ RUN /usr/bin/chmod -v 1777 /tmp
 # Update, install base-devel (incl. sudo), allow sudo for %users
 RUN echo "keyserver-options auto-key-retrieve" >> /etc/pacman.d/gnupg/gpg.conf && \
     pacman-key --init && \
-    pacman-key --populate archlinux && \
-    echo "Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/\$repo/os/\$arch" | /usr/sbin/sudo tee /etc/pacman.d/mirrorlist && \
-    echo -e "[archlinuxcn]\nServer = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/\$arch" | /usr/sbin/sudo tee -a /etc/pacman.conf && \
-    /usr/bin/pacman -Sy --noconfirm archlinux-keyring archlinuxcn-keyring && \
+    pacman-key --populate archlinux 
+RUN echo "Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/\$repo/os/\$arch" | /usr/sbin/sudo tee /etc/pacman.d/mirrorlist && \
+    echo -e "[archlinuxcn]\nServer = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/\$arch" | /usr/sbin/sudo tee -a /etc/pacman.conf
+RUN /usr/bin/pacman -Sy --noconfirm archlinux-keyring archlinuxcn-keyring && \
     /usr/bin/pacman -Su --noconfirm && \
     /usr/bin/pacman-db-upgrade && \
     /usr/bin/pacman -S --noconfirm ca-certificates ca-certificates-mozilla && \
